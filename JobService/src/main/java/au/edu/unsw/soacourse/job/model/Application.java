@@ -3,7 +3,7 @@ package au.edu.unsw.soacourse.job.model;
 
 public class Application {
 	private String appId;
-	private String candidate;
+	private String candidateId;
 	private String coverLetter;
 	private String status;
 	private Review review1;
@@ -14,11 +14,11 @@ public class Application {
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
-	public String getCandidate() {
-		return candidate;
+	public String getCandidateId() {
+		return candidateId;
 	}
-	public void setCandidate(String candidate) {
-		this.candidate = candidate;
+	public void setCandidateId(String candidate) {
+		this.candidateId = candidate;
 	}
 	public String getCoverLetter() {
 		return coverLetter;

@@ -3,7 +3,6 @@ package au.edu.unsw.soacourse.job;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,16 +12,11 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -30,7 +24,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -98,8 +91,8 @@ public class JobsResource {
 								String appChildNodeName = appChildNode.getNodeName();
 								if (appChildNodeName.equals("appId"))
 									app.setAppId(appChildNode.getTextContent());		
-								else if (appChildNodeName.equals("candidate"))
-									app.setCandidate(appChildNode.getTextContent());
+								else if (appChildNodeName.equals("candidateId"))
+									app.setCandidateId(appChildNode.getTextContent());
 								else if (appChildNodeName.equals("coverLetter"))
 									app.setCoverLetter(appChildNode.getTextContent());
 								else if (appChildNodeName.equals("status"))
@@ -153,7 +146,7 @@ public class JobsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String newApplication(
+	public String newJob(
 			@FormParam("companyName") String companyName,
 			@FormParam("salaryRate") String salaryRate,
 			@FormParam("positionType") String positionType,
