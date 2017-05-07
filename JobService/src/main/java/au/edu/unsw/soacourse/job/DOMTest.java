@@ -129,10 +129,10 @@ public class DOMTest {
         
         // build new book element
         Element book = document.createElement("book");
+        rootNode.appendChild(book);
         Element title = document.createElement("title");
         Element author = document.createElement("author");
         Element price = document.createElement("price");
-        rootNode.appendChild(book);
         book.appendChild(title);
         book.appendChild(author);
         book.appendChild(price);

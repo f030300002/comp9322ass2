@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jobs>
+	<job>
+		<jobId>jobId</jobId>
+		<companyName>companyName</companyName>
+		<salaryRate>salaryRate</salaryRate>
+		<positionType>positionType</positionType>
+		<location>location</location>
+		<jobDescription>jobDescription</jobDescription>
+		<status>status</status>
+		<applications>
+			<application>
+				<appId>appId</appId>
+				<candidate>candidate</candidate>
+				<coverLetter>coverLetter</coverLetter>
+				<status>status</status>
+				<review1>
+					<reviewId>reviewId</reviewId>
+					<reviewer>reviewer</reviewer>
+					<comment>comment</comment>
+					<recommend>recommend</recommend>
+				</review1>
+				<review2>
+					<reviewId>reviewId</reviewId>
+					<reviewer>reviewer</reviewer>
+					<comment>comment</comment>
+					<recommend>recommend</recommend>
+				</review2>
+			</application>
+			<application>...</application>
+			...
+		</applications>
+	</job>
+	<job>...</job>
+	...
+</jobs>
