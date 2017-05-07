@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><books>
+    <book bookno="001">
+        <title>Googling the Error Message</title>
+        <author>Google</author>
+        <price>80</price>
+    </book>
+    <book bookno="002">
+        <title>Copying and Pasting from Stack Overflow</title>
+        <author>Stack Overflow</author>
+        <price>90</price>
+    </book>
+<book><title>GL HF</title><author>GG</author><price>-999.0</price></book><book><title>GL HF</title><author>GG</author><price>-999.0</price></book></books>
