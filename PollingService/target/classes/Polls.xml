@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Polls>
+	<Poll>
+		<id>1</id>
+		<title>JAZUSHI Meeting</title>
+		<description>An interview hold on JAZUSHI restaurant</description>
+		<optiontype>choosing a meeting time</optiontype>
+		<options>
+			<option>13 MAY</option>
+			<option>17 MAY</option>
+		</options>
+		<comments>Please select a date</comments>
+		<finalchoice/>
+	</Poll>
+	<Poll>
+		<id>2</id>
+		<title>14 MAY Meeting</title>
+		<description>An interview hold on 4 MAY</description>
+		<optiontype>choosing a meeting restaurant</optiontype>
+		<options>
+			<option>JAZUSHI</option>
+			<option>YAYOI</option>
+			<option>TETSUYA</option>
+		</options>
+		<comments>Please select a date</comments>
+		<finalchoice/>
+	</Poll>
+</Polls>

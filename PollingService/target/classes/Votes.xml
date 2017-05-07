@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Votes>
+	<Vote>
+		<id>1</id>
+		<pid>1</pid>
+		<participantname>Tony</participantname>
+		<chosenoption>13 MAY</chosenoption>
+	</Vote>
+	<Vote>
+		<id>2</id>
+		<pid>1</pid>
+		<participantname>Mingxuan</participantname>
+		<chosenoption>17 MAY</chosenoption>
+	</Vote>
+	<Vote>
+		<id>3</id>
+		<pid>1</pid>
+		<participantname>Hushen</participantname>
+		<chosenoption>13 MAY</chosenoption>
+	</Vote>
+</Votes>
