@@ -1,21 +1,18 @@
 package au.edu.unsw.soacourse.job;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,7 +27,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import au.edu.unsw.soacourse.job.model.Application;
-import au.edu.unsw.soacourse.job.model.Job;
 import au.edu.unsw.soacourse.job.model.Review;
 
 @Path("/apps")
@@ -115,7 +111,7 @@ public class ApplicationsResource {
 	}
 	
 	// update an application
-	@POST
+	@PUT
 	@Path("/{appId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -138,9 +134,9 @@ public class ApplicationsResource {
 				Node jobChildNode = jobChildNodesList.item(j);
 				String jobChileNodeName = jobChildNode.getNodeName();
 				if (jobChileNodeName.equals("applications")) {
-					NodeList appNodeList = jobChildNode.getChildNodes();
-					for (int k = 0; k < appNodeList.getLength(); k ++) {
-						Node appNode = appNodeList.item(k);
+					NodeList appNodesList = jobChildNode.getChildNodes();
+					for (int k = 0; k < appNodesList.getLength(); k ++) {
+						Node appNode = appNodesList.item(k);
 						NodeList appChildNodesList = appNode.getChildNodes();
 						for (int l = 0; l < appChildNodesList.getLength(); l ++) {
 							Node appChildNode = appChildNodesList.item(l);

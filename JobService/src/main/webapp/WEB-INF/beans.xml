@@ -9,6 +9,7 @@
         <jaxrs:serviceBeans>
             <bean class="au.edu.unsw.soacourse.job.JobsResource"/>
             <bean class="au.edu.unsw.soacourse.job.ApplicationsResource"/>
+            <bean class="au.edu.unsw.soacourse.job.ReviewsResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
