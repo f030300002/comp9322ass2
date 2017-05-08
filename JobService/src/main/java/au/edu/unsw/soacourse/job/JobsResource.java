@@ -146,6 +146,7 @@ public class JobsResource {
 	
 	// search jobs
 	@GET
+	@Path("/search")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public Response searchJob(
 			@QueryParam ("companyName") String companyName,
@@ -160,8 +161,6 @@ public class JobsResource {
 		
 		if (jobsList == null)
 			res = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-		else if (jobsList.isEmpty())
-			res = Response.ok().build();
 		else
 			res = Response.ok(jobsList).build();
 		

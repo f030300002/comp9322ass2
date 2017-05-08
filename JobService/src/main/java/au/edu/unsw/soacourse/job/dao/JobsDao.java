@@ -382,7 +382,8 @@ public class JobsDao {
 		return "not found";
 	}
 	
-	static public List<Job> searchJob(String companyName, String salaryRateFrom, String salaryRateTo, String positionType, String location) throws Exception {
+	static public List<Job> searchJob(String companyName, String salaryRateFrom, 
+			String salaryRateTo, String positionType, String location) throws Exception {
 		List<Job> results = new ArrayList<>();
 		File file = new File("jobs.xml");
 		if (! file.exists())
