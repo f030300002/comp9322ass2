@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -80,11 +81,39 @@ public class ReviewsResource {
 	@Path("/{id}") // this id can be reviewId or appId or reviewer
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public Response getReviews(
-			@PathParam("id") String id
+			@PathParam("id") String id,
+			@HeaderParam("key") String key
 	) throws Exception {
 		Response res;
 		List<Review> revsList = null;
 		revsList = ReviewsDao.getReviews(id);
+		
+		if (revsList == null)
+			res = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		else if (revsList.isEmpty())
+			res = Response.status(Response.Status.NOT_FOUND).build();
+		else
+			res = Response.ok(revsList).build();
+		
+		return res;
+	}
+	
+	// get all reviews
+	@GET
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response getReviews(
+			@HeaderParam("key") String key
+	) throws Exception {
+		Response res;
+		
+		// check the authority
+		if (key == null || ! key.equals("admin")) {
+			res = Response.status(Response.Status.UNAUTHORIZED).build();
+			return res;
+		}
+		
+		List<Review> revsList = null;
+		revsList = ReviewsDao.getAllReviews();
 		
 		if (revsList == null)
 			res = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

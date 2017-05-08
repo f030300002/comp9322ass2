@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -31,7 +32,8 @@ public class JobsResource {
 	@Path("/{jobId}")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public Response getJob(
-			@PathParam("jobId") String jobId
+			@PathParam("jobId") String jobId,
+			@HeaderParam("key") String key
 	) throws Exception {
 		Response res;
 		Job job = null;
@@ -41,6 +43,33 @@ public class JobsResource {
 			res = Response.status(Response.Status.NOT_FOUND).build();
 		else
 			res = Response.ok(job).header("Location", uriInfo.getBaseUri() + "jobs/" + jobId).build();
+		
+		return res;
+	}
+	
+	// get all jobs
+	@GET
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response getJob(
+			@HeaderParam("key") String key
+	) throws Exception {
+		Response res;
+		
+		// check the authority
+		if (key == null || ! key.equals("admin")) {
+			res = Response.status(Response.Status.UNAUTHORIZED).build();
+			return res;
+		}
+		
+		List<Job> jobsList = null;
+		jobsList = JobsDao.getAllJobs();
+		
+		if (jobsList == null)
+			res = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		else if (jobsList.isEmpty())
+			res = Response.ok().build();
+		else
+			res = Response.ok(jobsList).build();
 		
 		return res;
 	}

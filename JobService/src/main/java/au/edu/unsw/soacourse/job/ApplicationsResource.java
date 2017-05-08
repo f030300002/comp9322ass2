@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -76,11 +77,39 @@ public class ApplicationsResource {
 	@Path("/{id}") // this id can be appId or jobId
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public Response getApplication(
-			@PathParam("id") String id
+			@PathParam("id") String id,
+			@HeaderParam("key") String key
 	) throws Exception {
 		Response res;
 		List<Application> appsList = null;
 		appsList = ApplicationsDao.getApplication(id);
+		
+		if (appsList == null)
+			res = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		else if (appsList.isEmpty())
+			res = Response.status(Response.Status.NOT_FOUND).build();
+		else
+			res = Response.ok(appsList).build();
+		
+		return res;
+	}
+	
+	// get all applications
+	@GET
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response getApplication(
+			@HeaderParam("key") String key
+	) throws Exception {
+		Response res;
+		
+		// check the authority
+		if (key == null || ! key.equals("admin")) {
+			res = Response.status(Response.Status.UNAUTHORIZED).build();
+			return res;
+		}
+		
+		List<Application> appsList = null;
+		appsList = ApplicationsDao.getAllApplication();
 		
 		if (appsList == null)
 			res = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

@@ -269,4 +269,67 @@ public class ReviewsDao {
 		}
 		return results;
 	}
+	
+	static public List<Review> getAllReviews() throws Exception {
+		List<Review> results = new ArrayList<>();
+		File file = new File("jobs.xml");
+		if (! file.exists())
+			return results;
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = builder.parse(file);
+		NodeList jobNodesList = doc.getDocumentElement().getChildNodes();
+		for (int i = 0; i < jobNodesList.getLength(); i ++) {
+			Node jobNode = jobNodesList.item(i);
+			NodeList jobChildNodesList = jobNode.getChildNodes();
+			for (int j = 0; j < jobChildNodesList.getLength(); j ++) {
+				Node jobChildNode = jobChildNodesList.item(j);
+				String jobChileNodeName = jobChildNode.getNodeName();
+				if (jobChileNodeName.equals("applications")) {
+					NodeList appNodeList = jobChildNode.getChildNodes();
+					for (int k = 0; k < appNodeList.getLength(); k ++) {
+						Node appNode = appNodeList.item(k);
+						NodeList appChildNodesList = appNode.getChildNodes();
+						for (int l = 0; l < appChildNodesList.getLength(); l ++) {
+							Node appChildNode = appChildNodesList.item(l);
+							String appChildNodeName = appChildNode.getNodeName();
+							if (appChildNodeName.equals("review1")) {
+								Review review = new Review();
+								NodeList reviewChildNodesList = appChildNode.getChildNodes();
+								for (int m = 0; m < reviewChildNodesList.getLength(); m ++) {
+									Node reviewChildNode = reviewChildNodesList.item(m);
+									String reviewChildNodeName = reviewChildNode.getNodeName();
+									if (reviewChildNodeName.equals("reviewId"))
+										review.setReviewId(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("reviewer"))
+										review.setReviewer(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("comment"))
+										review.setComment(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("recommend"))
+										review.setRecommend(reviewChildNode.getTextContent());
+								}
+								results.add(review);
+							} else if (appChildNodeName.equals("review2")) {
+								Review review = new Review();
+								NodeList reviewChildNodesList = appChildNode.getChildNodes();
+								for (int m = 0; m < reviewChildNodesList.getLength(); m ++) {
+									Node reviewChildNode = reviewChildNodesList.item(m);
+									String reviewChildNodeName = reviewChildNode.getNodeName();
+									if (reviewChildNodeName.equals("reviewId"))
+										review.setReviewId(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("reviewer"))
+										review.setReviewer(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("comment"))
+										review.setComment(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("recommend"))
+										review.setRecommend(reviewChildNode.getTextContent());
+								}
+								results.add(review);
+							}
+						}
+					}
+				}
+			}
+		}
+		return results;
+	}
 }

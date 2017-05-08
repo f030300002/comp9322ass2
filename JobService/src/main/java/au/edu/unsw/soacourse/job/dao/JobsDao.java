@@ -125,6 +125,98 @@ public class JobsDao {
 		return null;
 	}
 	
+	static public List<Job> getAllJobs() throws Exception {
+		List<Job> results = new ArrayList<>();
+		File file = new File("jobs.xml");
+		if (! file.exists())
+			return results;
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = builder.parse(file);
+		NodeList jobNodesList = doc.getDocumentElement().getChildNodes();
+		for (int i = 0; i < jobNodesList.getLength(); i ++) {
+			Node jobNode = jobNodesList.item(i);
+			NodeList jobChildNodesList = jobNode.getChildNodes();
+			Job job = new Job();
+			for (int j = 0; j < jobChildNodesList.getLength(); j ++) {
+				Node jobChildNode = jobChildNodesList.item(j);
+				String jobChileNodeName = jobChildNode.getNodeName();
+				if (jobChileNodeName.equals("jobId"))
+					job.setJobId(jobChildNode.getTextContent());
+				else if (jobChileNodeName.equals("companyName"))
+					job.setCompanyName(jobChildNode.getTextContent());
+				else if (jobChileNodeName.equals("salaryRate"))
+					job.setSalaryRate(jobChildNode.getTextContent());
+				else if (jobChileNodeName.equals("positionType"))
+					job.setPositionType(jobChildNode.getTextContent());
+				else if (jobChileNodeName.equals("location"))
+					job.setLocation(jobChildNode.getTextContent());
+				else if (jobChileNodeName.equals("jobDescription"))
+					job.setJobDescription(jobChildNode.getTextContent());
+				else if (jobChileNodeName.equals("status"))
+					job.setStatus(jobChildNode.getTextContent());
+				else if (jobChileNodeName.equals("applications")) {
+					List<Application> appList = new ArrayList<>();
+					NodeList appNodesList = jobChildNode.getChildNodes();
+					for (int k = 0; k < appNodesList.getLength(); k ++) {
+						Node appNode = appNodesList.item(k);
+						Application app = new Application();
+						NodeList appChildNodesList = appNode.getChildNodes();
+						for (int l = 0; l < appChildNodesList.getLength(); l ++) {
+							Node appChildNode = appChildNodesList.item(l);
+							String appChildNodeName = appChildNode.getNodeName();
+							if (appChildNodeName.equals("appId"))
+								app.setAppId(appChildNode.getTextContent());		
+							else if (appChildNodeName.equals("candidateId"))
+								app.setCandidateId(appChildNode.getTextContent());
+							else if (appChildNodeName.equals("coverLetter"))
+								app.setCoverLetter(appChildNode.getTextContent());
+							else if (appChildNodeName.equals("status"))
+								app.setStatus(appChildNode.getTextContent());
+							else if (appChildNodeName.equals("review1")) {
+								Review review = new Review();
+								NodeList reviewChildNodesList = appChildNode.getChildNodes();
+								for (int m = 0; m < reviewChildNodesList.getLength(); m ++) {
+									Node reviewChildNode = reviewChildNodesList.item(m);
+									String reviewChildNodeName = reviewChildNode.getNodeName();
+									if (reviewChildNodeName.equals("reviewId"))
+										review.setReviewId(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("reviewer"))
+										review.setReviewer(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("comment"))
+										review.setComment(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("recommend"))
+										review.setRecommend(reviewChildNode.getTextContent());
+								}
+								app.setReview1(review);
+							} else if (appChildNodeName.equals("review2")) {
+								Review review = new Review();
+								NodeList reviewChildNodesList = appChildNode.getChildNodes();
+								for (int m = 0; m < reviewChildNodesList.getLength(); m ++) {
+									Node reviewChildNode = reviewChildNodesList.item(m);
+									String reviewChildNodeName = reviewChildNode.getNodeName();
+									if (reviewChildNodeName.equals("reviewId"))
+										review.setReviewId(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("reviewer"))
+										review.setReviewer(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("comment"))
+										review.setComment(reviewChildNode.getTextContent());
+									else if (reviewChildNodeName.equals("recommend"))
+										review.setRecommend(reviewChildNode.getTextContent());
+								}
+								app.setReview2(review);
+							}
+						}
+						appList.add(app);
+					}
+					job.setApplications(appList);
+				}
+			}
+			results.add(job);
+		}
+		
+		return results;
+	}
+	
 	static public String newJob(Job job) throws Exception {
 		String companyName = job.getCompanyName();
 		String salaryRate = job.getSalaryRate();
