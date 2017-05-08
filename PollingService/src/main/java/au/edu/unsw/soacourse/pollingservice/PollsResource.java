@@ -18,8 +18,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import au.edu.unsw.soacourse.pollingservice.dao.PollsDao;
+import au.edu.unsw.soacourse.pollingservice.dao.VotesDao;
 import au.edu.unsw.soacourse.pollingservice.model.DBHandler;
 import au.edu.unsw.soacourse.pollingservice.model.Poll;
+import au.edu.unsw.soacourse.pollingservice.model.Vote;
 
 
 @Path("/polls")
@@ -28,7 +30,7 @@ public class PollsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String newPoll(
+	public Response newPoll(
 			//@FormParam("id") String id,
 			@FormParam("title") String title,
 			@FormParam("description") String description,
@@ -63,28 +65,39 @@ public class PollsResource {
 		//System.out.println(comments);
 		PollsDao pollsdao = new PollsDao();
 		String id = pollsdao.createPoll(p);
+		
+		if(id.equals("0")){
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+
+		}
+		
 		p.setId(id);
 		
-		return id;
+		return Response.status(Response.Status.CREATED).header("Location", "http://localhost:8080/Comp9322Ass2PollingService/polls/"+id).entity(id).build();
 	}
 	
 	@GET
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public List<Poll> getPolls() {
+	public Response getPolls() {
 		
-		List<Poll> ps = new ArrayList<Poll>();
+		List<Poll> ps = new ArrayList<>();
 		
 		PollsDao pollsdao = new PollsDao();
 		
 		ps = pollsdao.getPolls();
 		
-		return ps; 
+		if(ps!=null&&!ps.isEmpty()){
+			return Response.ok(ps).build();
+		}
+		
+		return Response.status(Response.Status.NOT_FOUND).build();
+			
 	}
 	
 	@GET
 	@Path("{pid}")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Poll getPoll(@PathParam("pid") String id) {
+	public Response getPoll(@PathParam("pid") String id) {
 		
 		Poll p = null;
 		List<Poll> ps = new ArrayList<Poll>();
@@ -93,20 +106,63 @@ public class PollsResource {
 		
 		ps = pollsdao.getPolls();
 		
-		if(Integer.parseInt(id)<=ps.size()&&Integer.parseInt(id)>=0)
-			p = ps.get(Integer.parseInt(id)-1);
-		
-		if(p==null){
-			// should we need to handle this ???
+		for(int i=0;i<ps.size();i++){
+			if(ps.get(i).getId().equals(id)){
+				p = ps.get(i);
+				break;
+			}
 		}
 		
-		return p; 
+		if(p==null){
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		
+		return Response.ok(p).build(); 
+	}
+	
+	@GET
+	@Path("{pid}/votes")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response getVotesByPid(@PathParam("pid") String id) {
+		
+		List<Vote> vs = new ArrayList<Vote>();
+		
+		VotesDao votesdao = new VotesDao();
+		
+		vs = votesdao.getVotesByPid(id);
+				
+		if(vs==null||vs.isEmpty()){
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		
+		return Response.ok(vs).build(); 
+	}
+	
+	@GET
+	@Path("{pid}/votes/{vid}")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response getVoteByPid(
+			@PathParam("pid") String pid,
+			@PathParam("vid") String vid
+	) {
+		
+		Vote v = new Vote();
+		
+		VotesDao votesdao = new VotesDao();
+		
+		v = votesdao.getVote(vid);
+		
+		if(v==null){
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		
+		return Response.ok(v).build(); 
 	}
 	
 	@GET
 	@Path("/search")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Poll searchPollByTitle(@QueryParam("title") String title) {
+	public Response searchPoll(@QueryParam("pid") String pid) {
 
 		Poll p = null;
 		List<Poll> ps = new ArrayList<Poll>();
@@ -116,35 +172,78 @@ public class PollsResource {
 		ps = pollsdao.getPolls();
 		
 		for(int i=0;i<ps.size();i++){
-			if(ps.get(i).getTitle().equals(title)){
+			if(ps.get(i).getId().equals(pid)){
 				p = ps.get(i);
 				break;
 			}
 		}
 		
 		if(p==null){
-			// should we need to handle this ???
+			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 		
-		return p; 
+		return Response.ok(p).build();
 	}
-	/*
+	
 	@PUT
-	@Path("{title}")
-	@Consumes(MediaType.APPLICATION_XML)
-	public Response updatePoll(Poll p) {
+	@Path("{pid}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response updatePoll(
+			
+			@PathParam("pid") String pid,
+			@FormParam("title") String title,
+			@FormParam("description") String description,
+			@FormParam("optiontype") String optionType,
+			@FormParam("option") List<String> options,
+			@FormParam("comments") String comments,
+			@FormParam("finalchoice") String finalChoice
+	) {
 		
-	}*/
+		String id = null;
+		
+		PollsDao pollsdao = new PollsDao();
+		
+		Poll p = new Poll();
+		
+		p.setId(pid);
+		p.setTitle(title);
+		p.setDescription(description);
+		p.setOptionType(optionType);
+		p.setOptions(options);
+		p.setComments(comments);
+		p.setFinalChoice(finalChoice);
+		
+		id = pollsdao.updatePoll(p);
+		
+		if(id.equals("no pid")){
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}else if(id.equals("exist votes")){
+			return Response.status(Response.Status.PRECONDITION_FAILED).build();
+		}
+		
+		//return Response.status(Response.Status.OK).header("Location", "http://localhost:8080/Comp9322Ass2PollingService/polls/"+id).build();
+		return Response.ok(p).build();
+	}
 	
 	@DELETE
-	@Path("{title}")
-	public void deletePollByTitle(@PathParam("title") String title) {
+	@Path("{pid}")
+	public Response deletePoll(@PathParam("pid") String id) {
 		
 		PollsDao pollsdao = new PollsDao();
 		
 		//System.out.println(title);
+		String did = null;
 		
-		pollsdao.deletePollByTitle(title);
+		did = pollsdao.deletePoll(id);
+		
+		if(did.equals("no pid")){
+			return Response.status(Response.Status.NOT_FOUND).build();
+
+		}else if(did.equals("exist votes")){
+			return Response.status(Response.Status.PRECONDITION_FAILED).build();
+		}
+		
+		return Response.status(Response.Status.NO_CONTENT).build();
 		
 	}
 	
