@@ -2,6 +2,23 @@ package au.edu.unsw.soacourse.job.model;
 
 
 public class Application {
+	private String jobId;
+	
+	public String getJobId() {
+		return jobId;
+	}
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
+	public Application(String appId, String coverLetter) {
+		this.appId = appId;
+		this.coverLetter = coverLetter;
+	}
+	public Application(String jobId, String candidateId, String coverLetter) {
+		this.jobId = jobId;
+		this.candidateId = candidateId;
+		this.coverLetter = coverLetter;
+	}
 	private String appId;
 	private String candidateId;
 	private String coverLetter;

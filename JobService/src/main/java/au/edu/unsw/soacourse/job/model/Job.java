@@ -68,4 +68,25 @@ public class Job {
 		applications = new ArrayList<>();
 	}
 	
+	public Job(String companyName, String salaryRate, String positionType,
+			String location, String jobDescription) {
+		this.companyName = companyName;
+		this.salaryRate = salaryRate;
+		this.positionType = positionType;
+		this.location = location;
+		this.jobDescription = jobDescription;
+	}
+	public Job(String jobId, String companyName, String salaryRate,
+			String positionType, String location, String jobDescription,
+			String status) {
+		this.jobId = jobId;
+		this.companyName = companyName;
+		this.salaryRate = salaryRate;
+		this.positionType = positionType;
+		this.location = location;
+		this.jobDescription = jobDescription;
+		this.status = status;
+	}
+	
+	
 }
