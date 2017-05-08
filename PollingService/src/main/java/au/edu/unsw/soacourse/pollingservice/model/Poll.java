@@ -14,7 +14,8 @@ public class Poll {
 	private List<String> options;
 	private String comments;	
 	private String finalChoice;
-	
+	private List<Vote> votesInPoll;
+
 	public Poll(){
 		
 	}
@@ -64,6 +65,13 @@ public class Poll {
 	}
 	public void setFinalChoice(String finalChoice) {
 		this.finalChoice = finalChoice;
+	}
+	public List<Vote> getVotesInPoll() {
+		return votesInPoll;
+	}
+
+	public void setVotesInPoll(List<Vote> votesInPoll) {
+		this.votesInPoll = votesInPoll;
 	}
 	
 }

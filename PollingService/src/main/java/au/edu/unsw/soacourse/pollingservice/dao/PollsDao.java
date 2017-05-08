@@ -71,8 +71,6 @@ public class PollsDao {
 			
 			XPathExpression expr = xpath.compile("/Polls/Poll[1]/title/text()");
 			
-			NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-			
 			int pollnodeNum = Integer.parseInt(xpath.evaluate(
 				      "count(/Polls/Poll)", doc, XPathConstants.STRING).toString());
 			
@@ -117,6 +115,10 @@ public class PollsDao {
 			    p.setComments(comments);
 			    p.setFinalChoice(finalChoice);
 			    
+			    VotesDao votesdao = new VotesDao();
+			    
+			    p.setVotesInPoll(votesdao.getVotesByPid(id));
+			    
 			    ps.add(p);
 			}
 			
@@ -128,9 +130,11 @@ public class PollsDao {
 		return ps; 
 	}
 	
-	public void deletePollByTitle(String title){
+	public String deletePoll(String pid){
 		
-		if(!votesInPoll(title)){
+		int id = 0;
+		
+		if(!votesInPoll(pid)){
 			
 			 try {
 				 
@@ -139,17 +143,17 @@ public class PollsDao {
 				int totalNum = Integer.parseInt(xpath.evaluate(
 					      "count(/Polls/Poll/id)", doc, XPathConstants.STRING).toString());
 				
-				int id = 0;
-				
 				for(int i=1;i<=totalNum;i++){
-					String t = (String) xpath.evaluate(
-				            "/Polls/Poll[" + i + "]/title/text()",
+					String tempid = (String) xpath.evaluate(
+				            "/Polls/Poll[" + i + "]/id/text()",
 				            doc, XPathConstants.STRING);		
-					if(t.equals(title)){
+					if(tempid.equals(pid)){
 						id = i-1;
 						break;
 					}
 			    }
+				
+				if(id==0) return "no pid";
 				
 				NodeList nl=doc.getElementsByTagName("Poll"); 
 				
@@ -183,19 +187,48 @@ public class PollsDao {
 				e.printStackTrace();
 			} 
 
+		}else{
+			return "exist votes";
 		}
 		
+		return id+"";
 	}
 	
-	public void updatePoll(Poll p){
+	public String updatePoll(Poll p){
 		
-		if(!votesInPoll(p.getTitle())){
+		int id = 0;
+		
+		if(!votesInPoll(p.getId())){
 			
 			preprocess("Polls.xml");
 			
 			NodeList nl=doc.getElementsByTagName("Poll"); 
 			
-			Element element=(Element)nl.item(Integer.parseInt(p.getId())-1); 
+			int totalNum = 0;
+			try {
+				totalNum = Integer.parseInt(xpath.evaluate(
+					      "count(/Polls/Poll/id)", doc, XPathConstants.STRING).toString());
+				
+				for(int i=1;i<=totalNum;i++){
+					String tempid = (String) xpath.evaluate(
+				            "/Polls/Poll[" + i + "]/id/text()",
+				            doc, XPathConstants.STRING);		
+					if(tempid.equals(p.getId())){
+						id = i-1;
+						break;
+					}
+			    }
+			} catch (NumberFormatException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (XPathExpressionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			if(id==0) return "no pid";
+			
+			Element element=(Element)nl.item(id); 
 			
 			if(p.getTitle()!=null){
 				Node nodeUpdate=element.getElementsByTagName("title").item(0);
@@ -207,7 +240,7 @@ public class PollsDao {
 			}
 			if(p.getOptionType()!=null){
 				Node nodeUpdate=element.getElementsByTagName("optiontype").item(0);
-	            nodeUpdate.getFirstChild().setNodeValue(p.getTitle()); 
+	            nodeUpdate.getFirstChild().setNodeValue(p.getOptionType()); 
 			}
 			if(p.getOptions()!=null){
 
@@ -248,7 +281,11 @@ public class PollsDao {
 	    			e.printStackTrace();
     			}
 			
-		} 
+		}else{
+			return "exist votes";
+		}
+		
+		return id+"";
 		
 	}
 	
@@ -334,16 +371,13 @@ public class PollsDao {
 		
 	}
 	
-	public boolean votesInPoll(String title){
+	public boolean votesInPoll(String id){
 		
 		boolean in = false;
 		
 		try {
 			preprocess("Polls.xml");
 			
-			String id = (String) xpath.evaluate(
-			        "/Polls/Poll[title='"+ title + "']/id/text()",
-			        doc, XPathConstants.STRING);
 			
 			if(id!=null&&!id.isEmpty()){
 				preprocess("Votes.xml");
