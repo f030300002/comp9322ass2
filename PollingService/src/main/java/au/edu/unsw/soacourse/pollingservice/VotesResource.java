@@ -31,11 +31,11 @@ public class VotesResource {
 		Vote v = null;
 		
 		VotesDao votesdao = new VotesDao();
-		
+		//System.out.println(id);
 		v = votesdao.getVote(id);
 		
 		if(v==null){
-			Response.status(Response.Status.NOT_FOUND).build();
+			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 		
 		return Response.ok(v).build();
@@ -53,9 +53,9 @@ public class VotesResource {
 		VotesDao votesdao = new VotesDao();
 		
 		vs = votesdao.getVotesByPid(id);
-		
+
 		if(vs==null||vs.isEmpty()){
-			Response.status(Response.Status.NOT_FOUND).build();
+			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 		
 		return Response.ok(vs).build();

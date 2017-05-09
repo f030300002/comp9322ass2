@@ -66,11 +66,39 @@ public class VotesDao {
 	
 	public Vote getVote(String id){
 	
-		Vote v = new Vote();
+		Vote v = null;
 		
 		try {
 			preprocess("Votes.xml");
 			
+			int totalNum = 0;
+			String vid = null;
+			try {
+				totalNum = Integer.parseInt(xpath.evaluate(
+					      "count(/Votes/Vote/id)", doc, XPathConstants.STRING).toString());
+				
+				for(int i=1;i<=totalNum;i++){
+					String tempid = (String) xpath.evaluate(
+				            "/Votes/Vote[" + i + "]/id/text()",
+				            doc, XPathConstants.STRING);		
+					if(tempid.equals(id)){
+						vid = id;
+						break;
+					}
+			    }
+			} catch (NumberFormatException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (XPathExpressionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			if(vid==null){
+
+				return v;
+			}
+
 			String pid = (String) xpath.evaluate(
 		            "/Votes/Vote[id='"+id+"']/pid/text()",
 		            doc, XPathConstants.STRING);
@@ -83,6 +111,8 @@ public class VotesDao {
 		            "/Votes/Vote[id='"+id+"']/chosenoption/text()",
 		            doc, XPathConstants.STRING);
 			
+			//System.out.println(id);
+			v = new Vote();
 			v.setId(id);
 			v.setPid(pid);
 			v.setParticipantName(participantName);
@@ -101,6 +131,9 @@ public class VotesDao {
 		List<Vote> vs = new ArrayList<Vote>();
 		
 		try {
+			
+			
+			
 			preprocess("Votes.xml");
 			
 			int totalNum = Integer.parseInt(xpath.evaluate(
@@ -109,14 +142,18 @@ public class VotesDao {
 			int votesNum = Integer.parseInt(xpath.evaluate(
 				      "count(/Votes/Vote[pid='"+id+"']/id)", doc, XPathConstants.STRING).toString());
 			
+			String pid = null;
+			boolean exist = false;
+			
 			for(int i=1;i<=totalNum;i++){
 				
-				String pid = (String) xpath.evaluate(
+				pid = (String) xpath.evaluate(
 						"/Votes/Vote[" + i + "]/pid/text()",
 			            doc, XPathConstants.STRING);
 				
 				if(pid.equals(id)){
 					Vote v = new Vote();
+					exist = true;
 					
 					String vid = (String) xpath.evaluate(
 							"/Votes/Vote[" + i + "]/id/text()",
@@ -139,6 +176,9 @@ public class VotesDao {
 				}
 				
 			}
+
+			if(pid==null) return null;
+			if(!exist) return null;
 			
 		} catch (XPathExpressionException e) {
 			// TODO Auto-generated catch block
@@ -151,7 +191,7 @@ public class VotesDao {
 	public String updateVote(Vote v){
 		
 		//String id = null;
-		int id = 0;
+		int id = -1;
 		
 		if(!finalChoiceInPoll(v.getPid())){
 			
@@ -183,7 +223,7 @@ public class VotesDao {
 				e1.printStackTrace();
 			}
 			
-			if(id==0) return "no vid";
+			if(id==-1) return "no vid";
 			
 			Element element=(Element)nl.item(id); 
 			
@@ -232,6 +272,7 @@ public class VotesDao {
 		try {
 			
 			preprocess("Votes.xml");
+			
 			
 			Element eltRoot=doc.getDocumentElement(); 
 			
@@ -296,11 +337,12 @@ public class VotesDao {
 		preprocess("Polls.xml");
 		
 		try {
-			String finalchoice = (String) xpath.evaluate(
-			        "/Polls/Poll[pid='"+ pid + "']/finalchoice/text()",
-			        doc, XPathConstants.STRING);
-			
-			if(!finalchoice.equals(" ")) in = true;
+
+			String finalchoice =  xpath.evaluate(
+			        "/Polls/Poll["+ Integer.parseInt(pid) + "]/finalchoice/text()",
+			        doc, XPathConstants.STRING).toString();
+
+			if(finalchoice!=null&&!finalchoice.equals(" ")) in = true;
 			
 		} catch (XPathExpressionException e) {
 			// TODO Auto-generated catch block

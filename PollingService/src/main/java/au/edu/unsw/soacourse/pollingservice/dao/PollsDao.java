@@ -132,7 +132,7 @@ public class PollsDao {
 	
 	public String deletePoll(String pid){
 		
-		int id = 0;
+		int id = -1;
 		
 		if(!votesInPoll(pid)){
 			
@@ -153,7 +153,7 @@ public class PollsDao {
 					}
 			    }
 				
-				if(id==0) return "no pid";
+				if(id==-1) return "no pid";
 				
 				NodeList nl=doc.getElementsByTagName("Poll"); 
 				
@@ -196,7 +196,7 @@ public class PollsDao {
 	
 	public String updatePoll(Poll p){
 		
-		int id = 0;
+		int id = -1;
 		
 		if(!votesInPoll(p.getId())){
 			
@@ -226,7 +226,7 @@ public class PollsDao {
 				e1.printStackTrace();
 			}
 			
-			if(id==0) return "no pid";
+			if(id==-1) return "no pid";
 			
 			Element element=(Element)nl.item(id); 
 			

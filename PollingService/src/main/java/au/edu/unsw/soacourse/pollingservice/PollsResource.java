@@ -146,11 +146,23 @@ public class PollsResource {
 			@PathParam("vid") String vid
 	) {
 		
-		Vote v = new Vote();
-		
 		VotesDao votesdao = new VotesDao();
 		
-		v = votesdao.getVote(vid);
+		List<Vote> vs = null;
+		vs = votesdao.getVotesByPid(pid);
+		
+		if(vs==null){
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		
+		Vote v = null;
+		
+		for(int i=0;i<vs.size();i++){
+			if(vs.get(i).getId().equals(vid)){
+				v = vs.get(i);
+				break;
+			}
+		}
 		
 		if(v==null){
 			return Response.status(Response.Status.NOT_FOUND).build();
