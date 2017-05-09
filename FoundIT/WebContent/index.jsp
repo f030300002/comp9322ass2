@@ -28,11 +28,22 @@
     </form>
     
     <form action="/FoundIT/c" method="post">
-    <input type="hidden" name="reqtype" value="GO_REGISTER">
+    <input type="hidden" name="reqtype" value="GO_REGISTER_EMPLOYER">
       <table>
         <tr>
           <td align="center">
-            <input type="submit" value="register">
+            <input type="submit" value="register as employer">
+          </td>
+        </tr>
+      </table>
+    </form>
+    
+    <form action="/FoundIT/c" method="post">
+    <input type="hidden" name="reqtype" value="GO_REGISTER_EMPLOYEE">
+      <table>
+        <tr>
+          <td align="center">
+            <input type="submit" value="register as employee">
           </td>
         </tr>
       </table>

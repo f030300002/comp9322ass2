@@ -9,14 +9,14 @@
 <body>
 
     <form action="/FoundIT/c" method="post">
-    <input type="hidden" name="reqtype" value="REGISTER">
+    <input type="hidden" name="reqtype" value="REGISTER_EMPLOYEE">
       <table>
         <tr>
-          <td>User Name (Email)</td>
-          <td><input type="text" name="userName"></td>
+          <td>User Name (Email)*</td>
+          <td><input type="text" name="userId"></td>
         </tr>
         <tr>
-          <td>Password</td>
+          <td>Password*</td>
           <td><input type="text" name="password"></td>
         </tr>
         <tr>
