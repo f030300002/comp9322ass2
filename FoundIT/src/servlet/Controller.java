@@ -31,6 +31,8 @@ public class Controller extends HttpServlet {
 			response.sendRedirect("/FoundIT/register/register.jsp");
 		} else if (requestType.equals("REGISTER")) {
 			userService.register(request, response);
+		} else if(requestType.equals("CREATE_POLL")){
+			
 		}
 		
 	}
